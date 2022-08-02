@@ -2,6 +2,7 @@
 
 const postContainer = document.querySelector('#posts-container');
 const loaderContainer = document.querySelector('.loader');
+const filterInput = document.querySelector('#filter');
 
 let page = 1;
 let limit = 5;
@@ -16,7 +17,7 @@ const addPostsIntoDOM = async() => {
     <div class="post">
       <div class="number">${id}</div>
       <div class="post-info">
-        <h2 class="post-tilte">${title}</h2>
+        <h2 class="post-title">${title}</h2>
         <p class="post-body">${body}</p>
       </div>
     </div>
@@ -27,9 +28,11 @@ const addPostsIntoDOM = async() => {
 addPostsIntoDOM()
 
 const getNextPosts = () => {
-  page += 1;
+  setTimeout(() => {
+    page += 1;
+    addPostsIntoDOM();
+  }, 300);
 
-  addPostsIntoDOM();
 };
 
 const removeLoader = () => {
@@ -51,6 +54,23 @@ window.addEventListener('scroll', () => {
   if (isPageBottomAlmostReached) {
     showLoader()
   }
+});
+
+filterInput.addEventListener('input', (event) => {
+  const inputValue = event.target.value.toLowerCase();
+  const posts = document.querySelectorAll('.post');
+
+  posts.forEach((post) => {
+    const postTitle = post.querySelector('.post-title').textContent.toLowerCase();
+    const postBody = post.querySelector('.post-body').textContent.toLowerCase();
+
+    if (postTitle.includes(inputValue) || postBody.includes(inputValue)) {
+      post.style.display = 'flex';
+      return;
+    };
+    post.style.display = 'none';
+  });
+  
 });
 
   /*
